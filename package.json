@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && node script.js"
+    "build": "tsc && node script.js",
+    "start": "sirv . --dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "sirv": "^1.0.12"
   }
 }

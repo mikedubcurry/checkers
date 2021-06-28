@@ -1,4 +1,4 @@
-import { IPosition, TFile, TRank, TRankFile } from 'types';
+import { IPosition, TFile, TRank, TRankFile } from './types';
 import { Board } from './board';
 
 const board = new Board();

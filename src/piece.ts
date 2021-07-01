@@ -2,9 +2,11 @@ import { Board } from './board';
 import { EFile, Files, IPosition, TBoard, TPiece, TRankFile } from './types';
 
 export class Piece {
+	king: boolean
 	constructor(public position: IPosition, public color: TPiece) {
 		this.position = position;
 		this.color = color;
+		this.king = false;
 	}
 
 	move(newPosition: IPosition, board: Board, attacking: boolean) {
@@ -30,10 +32,12 @@ export class Piece {
 			if (newPosition.file !== file && Math.abs(EFile[newPosition.file] - EFile[file]) === 1) {
 				if (newPosition.rank !== rank && Math.abs(newPosition.rank - rank) === 1) {
 					let rankFile = `${newPosition.rank}${newPosition.file}` as TRankFile;
-					if(this.color === 'red') {
-						if(this.position.rank > newPosition.rank) return false;
-					} else {
-						if(this.position.rank < newPosition.rank) return false;
+					if(!this.king){
+						if(this.color === 'red') {
+							if(this.position.rank > newPosition.rank) return false;
+						} else {
+							if(this.position.rank < newPosition.rank) return false;
+						}
 					}
 					if (!board.squares[rankFile].piece) return true;
 				}
@@ -42,5 +46,9 @@ export class Piece {
 
 			return false;
 		}
+	}
+
+	kingMe() {
+		this.king = true;
 	}
 }

@@ -30,6 +30,11 @@ export class Piece {
 			if (newPosition.file !== file && Math.abs(EFile[newPosition.file] - EFile[file]) === 1) {
 				if (newPosition.rank !== rank && Math.abs(newPosition.rank - rank) === 1) {
 					let rankFile = `${newPosition.rank}${newPosition.file}` as TRankFile;
+					if(this.color === 'red') {
+						if(this.position.rank > newPosition.rank) return false;
+					} else {
+						if(this.position.rank < newPosition.rank) return false;
+					}
 					if (!board.squares[rankFile].piece) return true;
 				}
 			}

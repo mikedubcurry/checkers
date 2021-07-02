@@ -1,5 +1,5 @@
 import { Piece } from './piece';
-import { TRank, TFile, TSquare, TBoard, TRankFile, IPosition } from './types';
+import { TRank, TFile, TSquare, TBoard, TRankFile, IPosition, toRankFile } from './types';
 
 export class Board {
 	squares: TBoard;
@@ -42,6 +42,11 @@ export class Board {
 		return rankFiles.map((rf) => {
 			return this.squares[rf];
 		});
+	}
+
+	isPieceAtPosition(pos: IPosition): boolean {
+		const rankFile = toRankFile(pos);
+		return this.squares[rankFile].piece instanceof Piece 
 	}
 }
 

@@ -22,6 +22,7 @@ function updateBoard() {
 		domSquare.setAttribute('data-pos', `${square.pos.rank}${square.pos.file}`);
 		if (domSquare.classList.contains('piece')) {
 			domSquare.addEventListener('click', handleFirstClick);
+
 		} else {
 			domSquare.addEventListener('click', handleSecondClick);
 		}
@@ -29,19 +30,19 @@ function updateBoard() {
 	});
 }
 
-let firstSelected: string | null = null;
-let secondSelected: string | null = null;
+let firstSelected: TRankFile | null = null;
+let secondSelected: TRankFile | null = null;
 
 function handleFirstClick(event: MouseEvent) {
 	if (!firstSelected) {
 		let square = event.target as HTMLElement;
 		square.classList.add('selected');
-		firstSelected = square.getAttribute('data-pos');
+		firstSelected = square.getAttribute('data-pos') as TRankFile;
 		let t = setTimeout(() => {
 			square.classList.remove('selected');
 			firstSelected = null;
 			clearTimeout(t);
-		}, 1000);
+		}, 2000);
 	}
 }
 
@@ -49,18 +50,25 @@ function handleSecondClick(event: MouseEvent) {
 	if (firstSelected && !secondSelected) {
 		let square = event.currentTarget as HTMLElement;
 		square.classList.add('selected');
-		secondSelected = square.getAttribute('data-pos');
+		secondSelected = square.getAttribute('data-pos') as TRankFile;
+		console.log(secondSelected);
+		const [rank1, file1] = firstSelected.split('')
+		const [rank2, file2] = secondSelected.split('');
+		// calculate if positions are 2 units away, and if theres a piece in between
+
+		
 		movePiece(firstSelected as TRankFile, secondSelected as TRankFile);
 		let t = setTimeout(() => {
 			square.classList.remove('selected');
 			secondSelected = null;
 			clearTimeout(t);
-		}, 1000);
+		}, 2000);
 	}
 }
 
+function handleThirdClick(event: MouseEvent) {}
+
 function movePiece(pieceRF: TRankFile, squareRF: TRankFile) {
-	let piecePos = toPosition(pieceRF);
 	let squarePos = toPosition(squareRF);
 
 	const pieceSquare = board.squares[pieceRF];

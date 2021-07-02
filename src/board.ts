@@ -7,7 +7,7 @@ export class Board {
 		this.squares = this.initializeBoard();
 	}
 
-	initializeBoard(): TBoard {
+	private initializeBoard(): TBoard {
 		let board = {} as TBoard;
 		let files = 'abcdefgh';
 		for (let i = 0; i < 8; i++) {
@@ -24,11 +24,11 @@ export class Board {
 		return board;
 	}
 
-	setSquare(pos: IPosition, p?: Piece): TSquare {
+	private setSquare(pos: IPosition, p?: Piece): TSquare {
 		return { piece: p ? p : null, pos };
 	}
 
-	updateBoard(oldPosition: IPosition, piece: Piece) {
+	public updateBoard(oldPosition: IPosition, piece: Piece) {
 		const oldRankFile = `${oldPosition.rank}${oldPosition.file}` as TRankFile;
 		const newRankFile = `${piece.position.rank}${piece.position.file}` as TRankFile;
 
@@ -36,7 +36,7 @@ export class Board {
 		this.squares[newRankFile] = this.setSquare(piece.position, piece);
 	}
 
-	getSquares(): TSquare[] {
+	public getSquares(): TSquare[] {
 		const rankFiles = Object.keys(this.squares) as TRankFile[];
 
 		return rankFiles.map((rf) => {
@@ -44,14 +44,14 @@ export class Board {
 		});
 	}
 
-	isPieceAtPosition(pos: IPosition): boolean {
+	public isPieceAtPosition(pos: IPosition): boolean {
 		const rankFile = toRankFile(pos);
 		return this.squares[rankFile].piece instanceof Piece 
 	}
 }
 
-let b = new Board();
+// let b = new Board();
 
-b.squares['1d'].piece?.move({ rank: 2, file: 'e' }, b, false);
-b.squares['2e'].piece?.move({ rank: 3, file: 'f' }, b, false);
-console.log(b.squares);
+// b.squares['1d'].piece?.move({ rank: 2, file: 'e' }, b, false);
+// b.squares['2e'].piece?.move({ rank: 3, file: 'f' }, b, false);
+// console.log(b.squares);

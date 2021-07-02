@@ -55,6 +55,7 @@ function handleSecondClick(event: MouseEvent) {
 		const [rank1, file1] = firstSelected.split('')
 		const [rank2, file2] = secondSelected.split('');
 		// calculate if positions are 2 units away, and if theres a piece in between
+		
 
 		
 		movePiece(firstSelected as TRankFile, secondSelected as TRankFile);

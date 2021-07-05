@@ -34,5 +34,5 @@ export type TSquare = {
 
 export function toRankFile(position: IPosition): TRankFile {
 	const {rank, file} = position;
-	return `${rank}${file}`
+	return `${rank}${file}` as TRankFile
 }

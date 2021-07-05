@@ -36,6 +36,10 @@ export class Board {
 		this.squares[newRankFile] = this.setSquare(piece.position, piece);
 	}
 
+	public removePiece(pos: IPosition) {
+		this.setSquare(pos)
+	}
+
 	public getSquares(): TSquare[] {
 		const rankFiles = Object.keys(this.squares) as TRankFile[];
 

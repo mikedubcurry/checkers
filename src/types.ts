@@ -12,7 +12,7 @@ export enum EFile {
 	g = 6,
 	h = 7,
 }
-export const Files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+
 
 export interface IPosition {
 	file: TFile;
@@ -29,10 +29,18 @@ export type TBoard = {
 
 export type TSquare = {
 	piece: Piece | null;
-	pos: IPosition
+	pos: IPosition;
 };
 
 export function toRankFile(position: IPosition): TRankFile {
-	const {rank, file} = position;
-	return `${rank}${file}` as TRankFile
+	const { rank, file } = position;
+	return `${rank}${file}` as TRankFile;
 }
+
+export type TColumn = {
+	[key in TFile]: TSquare;
+};
+
+export type TRow = {
+	[key in TRank]: TColumn;
+};

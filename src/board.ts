@@ -1,60 +1,38 @@
 import { Piece } from './piece';
-import { TRank, TFile, TSquare, TBoard, TRankFile, IPosition, toRankFile } from './types';
-
+import { TRow, TColumn, TFile, TRank } from './types';
+export const Files: TFile[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+export const Ranks: TRank[] = [0, 1, 2, 3, 4, 5, 6, 7];
 export class Board {
-	squares: TBoard;
+	private rows: TRow;
+
 	constructor() {
-		this.squares = this.initializeBoard();
+		this.rows = Ranks.reduce((rows, rank) => {
+			rows[rank] = this.initColumn(rank);
+			return rows;
+		}, {} as TRow);
 	}
 
-	private initializeBoard(): TBoard {
-		let board = {} as TBoard;
-		let files = 'abcdefgh';
-		for (let i = 0; i < 8; i++) {
-			for (let j = 0; j < 8; j++) {
-				let rankFile = `${i}${files[j]}` as TRankFile;
-				if (i <= 1 || i >= 6) {
-					let p = new Piece({ rank: i as TRank, file: files[j] as TFile }, i <= 1 ? 'red' : 'black');
-					board[rankFile] = this.setSquare({ rank: i as TRank, file: files[j] as TFile }, p);
-				} else {
-					board[rankFile] = this.setSquare({ rank: i as TRank, file: files[j] as TFile });
-				}
+	private initColumn(rank: TRank) {
+		return Files.reduce((col, file) => {
+			if ((file === 'a' || file === 'c' || file === 'g') && rank % 2 === 0) {
+				// create piece
+				col[file] = { piece: new Piece({ rank, file }, file !== 'g' ? 'red' : 'black'), pos: { file, rank } };
+			} else if ((file === 'b' || file === 'f' || file === 'h') && rank % 2 !== 0) {
+				// create piece
+				col[file] = { piece: new Piece({ rank, file }, file !== 'b' ? 'black' : 'red'), pos: { file, rank } };
+			} else {
+				col[file] = { piece: null, pos: { file, rank } };
 			}
-		}
-		return board;
+			return col;
+		}, {} as TColumn);
 	}
 
-	private setSquare(pos: IPosition, p?: Piece): TSquare {
-		return { piece: p ? p : null, pos };
-	}
-
-	public updateBoard(oldPosition: IPosition, piece: Piece) {
-		const oldRankFile = `${oldPosition.rank}${oldPosition.file}` as TRankFile;
-		const newRankFile = `${piece.position.rank}${piece.position.file}` as TRankFile;
-
-		this.squares[oldRankFile] = this.setSquare(oldPosition);
-		this.squares[newRankFile] = this.setSquare(piece.position, piece);
-	}
-
-	public removePiece(pos: IPosition) {
-		this.setSquare(pos)
-	}
-
-	public getSquares(): TSquare[] {
-		const rankFiles = Object.keys(this.squares) as TRankFile[];
-
-		return rankFiles.map((rf) => {
-			return this.squares[rf];
-		});
-	}
-
-	public isPieceAtPosition(pos: IPosition): boolean {
-		const rankFile = toRankFile(pos);
-		return this.squares[rankFile].piece instanceof Piece 
+	public getRows(): TRow {
+		return this.rows;
 	}
 }
 
-// let b = new Board();
+let b = new Board();
 
 // b.squares['1d'].piece?.move({ rank: 2, file: 'e' }, b, false);
 // b.squares['2e'].piece?.move({ rank: 3, file: 'f' }, b, false);

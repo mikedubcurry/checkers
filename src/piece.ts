@@ -1,5 +1,5 @@
-import { Board } from './board';
-import { EFile, Files, IPosition, TBoard, TPiece, TRankFile } from './types';
+import { Board, Files } from './board';
+import { EFile, IPosition, TBoard, TPiece, TRankFile } from './types';
 
 export class Piece {
 	king: boolean;
@@ -18,7 +18,7 @@ export class Piece {
 			if(this.color === 'red') {
 				let midRank = oldPosition.rank + 1;
 				let midFile = Files[EFile[newPosition.file] - EFile[oldPosition.file]]
-				//@ts-ignore
+				// @ts-ignore
 				let piece = board.squares[`${midRank}${midFile}`]
 				//@ts-ignore
 				board.removePiece({rank:midRank, file:midFile});
@@ -26,7 +26,7 @@ export class Piece {
 				
 			}
 		}
-		board.updateBoard(oldPosition, this);
+		// board.updateBoard(oldPosition, this);
 	}
 
 	public canMoveTo(newPosition: IPosition, board: Board, attacking: boolean) {
@@ -53,7 +53,7 @@ export class Piece {
 							if (this.position.rank < newPosition.rank) return false;
 						}
 					}
-					if (!board.squares[rankFile].piece) return true;
+					// if (!board.squares[rankFile].piece) return true;
 				}
 			}
 			return false;

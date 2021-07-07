@@ -24,3 +24,6 @@ files.forEach((file) => {
 		fs.writeFileSync(dist + '/' + file, withExt);
 	}
 });
+
+// copy index.html into ./dist
+fs.copyFileSync("./src/index.html", './dist/index.html')

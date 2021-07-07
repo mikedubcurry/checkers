@@ -1,76 +1,98 @@
-import { Board, Files } from './board';
-import { EFile, IPosition, TBoard, TPiece, TRankFile } from './types';
+import { Board, Files, Ranks } from "./board";
+import { EFile, ERank, IPosition, TBoard, TPiece, TRank, TRankFile } from "./types";
 
 export class Piece {
-	king: boolean;
-	constructor(public position: IPosition, public color: TPiece) {
-		this.position = position;
-		this.color = color;
-		this.king = false;
-	}
+    king: boolean;
+    constructor(public position: IPosition, public color: TPiece) {
+        this.position = position;
+        this.color = color;
+        this.king = false;
+    }
 
-	move(newPosition: IPosition, board: Board, attacking: boolean) {
-		let oldPosition = this.position;
-		if (this.canMoveTo(newPosition, board, attacking)) {
-			console.log('moving');
+    move(newPosition: IPosition, board: Board, attacking: boolean) {
+        let oldPosition = this.position;
+        if (this.canMoveTo(newPosition, board, attacking)) {
+            this.position = newPosition;
+        }
+        if (attacking) {
+            // delete piece
+            let midRank: TRank =
+                Ranks[Math.floor((ERank[newPosition.rank] + ERank[oldPosition.rank]) / 2)];
+            let midFile =
+                Files[Math.floor((EFile[newPosition.file] + EFile[oldPosition.file]) / 2)];
+            // make sure you dont remove one of your own pieces!
+            if (this.position.rank !== midRank && this.position.file !== midFile) {
+                let rows = board.getRows();
+                console.log(midRank, midFile);
 
-			this.position = newPosition;
-		}
-		if (attacking) {
-			// delete piece
+                let piece = rows[midRank][midFile].piece;
+                if (piece && piece.color !== this.color) {
+                    board.removePiece({ rank: midRank, file: midFile }, this.color);
+                    board.updateBoard(oldPosition, this);
+                    this.setKing();
+                }
+            }
+        } else {
+            board.updateBoard(oldPosition, this);
 
-			if (this.color === 'red') {
-				let midRank = oldPosition.rank + 1;
-				let midFile = Files[EFile[newPosition.file] - EFile[oldPosition.file]];
-				// @ts-ignore
-				let piece = board.squares[`${midRank}${midFile}`];
-				//@ts-ignore
-				board.removePiece({ rank: midRank, file: midFile });
-				console.log('piece removed?');
-			}
-		}
-		console.log(board);
-		board.updateBoard(oldPosition, this);
-		console.log(board);
-		this.kingMe();
-	}
+            this.setKing();
+        }
+    }
 
-	public canMoveTo(newPosition: IPosition, board: Board, attacking: boolean) {
-		let { file, rank } = this.position;
-		if (attacking) {
-			if (newPosition.file !== file && Math.abs(EFile[newPosition.file] - EFile[file]) === 2) {
-				if (newPosition.rank !== rank && Math.abs(newPosition.rank - rank) === 2) {
-					let rankDiff = (newPosition.rank + rank) / 2;
-					let fileDiff = Files[(EFile[newPosition.file] + EFile[file]) / 2];
-					let rankFile = `${rankDiff}${fileDiff}` as TRankFile;
-					console.log('can move to');
-					return true;
-				}
-				return false;
-			}
-		} else {
-			if (newPosition.file !== file && Math.abs(EFile[newPosition.file] - EFile[file]) === 1) {
-				if (newPosition.rank !== rank && Math.abs(newPosition.rank - rank) === 1) {
-					if (!this.king) {
-						if (this.color === 'red') {
-							// rank and file are rotated 90 degrees due to board datastructure...
-							if (this.position.file > newPosition.file) return false;
-						} else {
-							if (this.position.file < newPosition.file) return false;
-						}
-					}
-					if (!board.getRows()[newPosition.rank][newPosition.file].piece) {
-						return true;
-					}
-				}
-			}
+    public canMoveTo(newPosition: IPosition, board: Board, attacking: boolean) {
+        let { file, rank } = this.position;
+        if (attacking) {
+            if (
+                newPosition.file !== file &&
+                Math.abs(EFile[newPosition.file] - EFile[file]) === 2
+            ) {
+                if (
+                    newPosition.rank !== rank &&
+                    Math.abs(ERank[newPosition.rank] - ERank[rank]) === 2
+                ) {
+                    let midRank = Ranks[Math.floor((ERank[newPosition.rank] + ERank[rank]) / 2)];
+                    let midFile = Files[Math.floor((EFile[newPosition.file] + EFile[file]) / 2)];
+                    if (
+                        board.getRows()[midRank][midFile].piece &&
+                        board.getRows()[midRank][midFile].piece?.color !== this.color
+                    ) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } else {
+            if (
+                newPosition.file !== file &&
+                Math.abs(EFile[newPosition.file] - EFile[file]) === 1
+            ) {
+                if (
+                    newPosition.rank !== rank &&
+                    Math.abs(ERank[newPosition.rank] - ERank[rank]) === 1
+                ) {
+                    if (!this.king) {
+                        if (this.color === "red") {
+                            // rank and file are rotated 90 degrees due to board datastructure...
+                            if (this.position.file > newPosition.file) return false;
+                        } else {
+                            if (this.position.file < newPosition.file) return false;
+                        }
+                    }
+                    if (!board.getRows()[newPosition.rank][newPosition.file].piece) {
+                        return true;
+                    }
+                }
+            }
 
-			return false;
-		}
-	}
+            return false;
+        }
+    }
 
-	kingMe() {
-		if ((this.color === 'red' && this.position.file === 'h') || (this.color === 'black' && this.position.file === 'a'))
-			this.king = true;
-	}
+    setKing() {
+        if (
+            (this.color === "red" && this.position.file === "h") ||
+            (this.color === "black" && this.position.file === "a")
+        )
+            this.king = true;
+    }
 }

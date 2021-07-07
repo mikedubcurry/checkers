@@ -32,6 +32,7 @@ export class Piece {
 		console.log(board);
 		board.updateBoard(oldPosition, this);
 		console.log(board);
+		this.kingMe();
 	}
 
 	public canMoveTo(newPosition: IPosition, board: Board, attacking: boolean) {
@@ -52,6 +53,7 @@ export class Piece {
 				if (newPosition.rank !== rank && Math.abs(newPosition.rank - rank) === 1) {
 					if (!this.king) {
 						if (this.color === 'red') {
+							// rank and file are rotated 90 degrees due to board datastructure...
 							if (this.position.file > newPosition.file) return false;
 						} else {
 							if (this.position.file < newPosition.file) return false;
@@ -68,6 +70,7 @@ export class Piece {
 	}
 
 	kingMe() {
-		this.king = true;
+		if ((this.color === 'red' && this.position.file === 'h') || (this.color === 'black' && this.position.file === 'a'))
+			this.king = true;
 	}
 }

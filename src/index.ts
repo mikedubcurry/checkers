@@ -31,6 +31,9 @@ function updateBoard() {
 				let piece = rows[row][col].piece!;
 				square.classList.add('piece', piece.color);
 				square.addEventListener('click', handlePieceClick);
+				if(rows[row][col].piece?.king) {
+					square.classList.add('king')
+				}
 			}
 			square.setAttribute('data-pos', `${row}${col}`);
 			square.classList.add(i++ % 2 === 0 ? 'blue' : 'gray');

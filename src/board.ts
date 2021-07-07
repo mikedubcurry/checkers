@@ -45,8 +45,6 @@ export class Board {
 				[newPosition.file]: { piece, position: newPosition },
 			},
 		};
-		console.log(this.rows);
-		
 	}
 
 	public getRows(): TRow {

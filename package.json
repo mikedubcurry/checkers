@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc && node script.js",
-    "start": "sirv ./dist --dev"
+    "start": "sirv ./dist --dev -H"
   },
   "keywords": [],
   "author": "",

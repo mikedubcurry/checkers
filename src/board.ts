@@ -1,5 +1,5 @@
 import { Piece } from './piece';
-import { TRow, TColumn, TFile, TRank } from './types';
+import { TRow, TColumn, TFile, TRank, IPosition } from './types';
 export const Files: TFile[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 export const Ranks: TRank[] = [0, 1, 2, 3, 4, 5, 6, 7];
 export class Board {
@@ -25,6 +25,28 @@ export class Board {
 			}
 			return col;
 		}, {} as TColumn);
+	}
+
+	public updateBoard(oldPosition: IPosition, piece: Piece) {
+		// this.rows[oldPosition.rank][oldPosition.file].piece = null;
+		// this.rows[piece.position.rank][piece.position.file] = { piece, pos: piece.position };
+		let newPosition = piece.position;
+		this.rows = {
+			...this.rows,
+			[oldPosition.rank]: {
+				...this.rows[oldPosition.rank],
+				[oldPosition.file]: { piece: null, position: oldPosition },
+			},
+		};
+		this.rows = {
+			...this.rows,
+			[newPosition.rank]: {
+				...this.rows[newPosition.rank],
+				[newPosition.file]: { piece, position: newPosition },
+			},
+		};
+		console.log(this.rows);
+		
 	}
 
 	public getRows(): TRow {

@@ -9,6 +9,12 @@ function getTypedKeys<T>(obj: T): Array<keyof T> {
 	return Object.keys(obj) as Array<keyof typeof obj>;
 }
 
+function getPositionFromSquare(rankFile: string): IPosition {
+	let rank = rankFile[0] as unknown as TRank;
+	let file = rankFile[1] as unknown as TFile;
+	return { rank, file };
+}
+
 function updateBoard() {
 	document.querySelectorAll('.square').forEach((square) => {
 		square.remove();
@@ -63,9 +69,16 @@ function handleSquareClick(event: MouseEvent) {
 	if (pos && !squaresSelected.includes(pos)) {
 		square.classList.add('selected1');
 		squaresSelected.push(pos);
-	} else if (pos === squaresSelected[squaresSelected.length - 1]) {
+	} else if (pieceSelected && pos === squaresSelected[squaresSelected.length - 1]) {
 		// execute moves
-		
+		const rankFile = pieceSelected;
+		const piecePosition = getPositionFromSquare(rankFile);
+		const { piece } = board.getRows()[piecePosition.rank][piecePosition.file];
+		if (piece) {
+			const newPosition = getPositionFromSquare(squaresSelected[0]);
+			piece.move(newPosition, board, false);
+			updateBoard();
+		}
 		console.log('trying to move', pieceSelected, ' to ', squaresSelected.join(', then to '));
 		clearSelected0();
 		clearSelected1();

@@ -90,7 +90,6 @@ function handleSquareClick(event: MouseEvent) {
             piece.move(newPosition, board, attacking);
             updateBoard();
         }
-        console.log("trying to move", pieceSelected, " to ", squaresSelected.join(", then to "));
         clearSelected0();
         clearSelected1();
         clearAttacking();
@@ -132,87 +131,19 @@ window.addEventListener("resize", (event) => {
     }
 });
 
-// let firstSelected: TRankFile | null = null;
-// let secondSelected: TRankFile | null = null;
-// let attacking = false;
-// let moveMap = {};
-
-// function handleFirstClick(event: MouseEvent) {
-// 	let square = event.target as HTMLElement;
-// 	if (!firstSelected) {
-// 		square.classList.add('selected');
-// 		firstSelected = square.getAttribute('data-pos') as TRankFile;
-// 		// let t = setTimeout(() => {
-// 		// 	square.classList.remove('selected');
-// 		// 	firstSelected = null;
-// 		// 	clearTimeout(t);
-// 		// }, 2000);
-// 	} else if (attacking) {
-// 		clearSelected();
-// 	} else {
-// 		square.classList.add('attacking');
-// 		attacking = true;
-// 		// clearSelected()
-// 		// firstSelected = null;
-// 	}
-// }
-
-// function handleSecondClick(event: MouseEvent) {
-// 	if (firstSelected && !secondSelected) {
-// 		let square = event.currentTarget as HTMLElement;
-// 		square.classList.add('selected');
-// 		secondSelected = square.getAttribute('data-pos') as TRankFile;
-
-// 		const [rank1, file1] = firstSelected.split('');
-// 		const [rank2, file2] = secondSelected.split('');
-// 		// calculate if positions are 2 units away, and if theres a piece in between
-
-// 		movePiece(firstSelected as TRankFile, secondSelected as TRankFile);
-// 		clearSelected();
-// 		// secondSelected = null;
-// 	}
-// }
-
-// function handleAttackClick(event: MouseEvent) {
-// 	const element = event.target as HTMLElement;
-// 	const rf = element.getAttribute('data-pos');
-
-// 	if (!firstSelected || firstSelected !== rf) {
-// 		return;
-// 	} else {
-// 		element.classList.add('attacking');
-// 		attacking = true;
-
-// 		let t = setTimeout(() => {
-// 			element.classList.remove('attacking');
-// 			attacking = false;
-// 			clearTimeout(t);
-// 		}, 2000);
-// 	}
-// }
-
-// function movePiece(pieceRF: TRankFile, squareRF: TRankFile) {
-// 	let squarePos = toPosition(squareRF);
-
-// 	const pieceSquare = board.squares[pieceRF];
-// 	const { piece } = pieceSquare;
-// 	piece?.move(squarePos, board, attacking);
-// 	updateBoard();
-// }
-
-// function toPosition(rf: TRankFile): IPosition {
-// 	let [rank, file] = rf;
-// 	return { rank: rank as unknown as TRank, file: file as unknown as TFile };
-// }
-
-// function clearSelected() {
-// 	let squares = document.querySelectorAll('.square');
-// 	squares.forEach((square) => {
-// 		square.classList.remove('selected');
-// 		square.classList.remove('attacking')
-// 	});
-// 	firstSelected = null;
-// 	secondSelected = null;
-// 	attacking = false;
-// }
+window.addEventListener("wheel", (ev) => {
+    let { deltaY } = ev;
+    const currentAngleValue = getComputedStyle(document.body).getPropertyValue("--view-angle");
+    const currentAngle = parseInt(currentAngleValue);
+    console.log(currentAngle, currentAngleValue);
+    let newAngle;
+    if (deltaY > 0) {
+        newAngle = currentAngle + 5;
+    } else {
+        newAngle = currentAngle - 5;
+    }
+    // let newAngle = deltaY > 0 ? (currentAngle + 5) % 45 : currentAngle - 5;
+    document.documentElement.style.setProperty("--view-angle", `${newAngle}deg`);
+    // }
+});
 export const noop = () => {};
